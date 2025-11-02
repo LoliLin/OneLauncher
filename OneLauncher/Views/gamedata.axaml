@@ -61,8 +61,16 @@
 						  ItemsSource="{Binding AvailableTags}"
 						  SelectedItem="{Binding SelectedTag}">
 					<ComboBox.ItemTemplate>
-						<DataTemplate x:DataType="gamedatamanager:GameDataTag">
-							<TextBlock Text="{Binding Name}" />
+						<DataTemplate x:DataType="vm:GameDataTagItem">
+							<Grid ColumnDefinitions="*,*">
+								<TextBlock Grid.Column="0" Text="{Binding Data.Name}" />
+								<Button Grid.Column="1" Command="{Binding DeleteTagCommand}" Height="24">
+									<TextBlock Text="移除标签"/>
+									<Button.Styles>
+										<StyleInclude Source="avares://OneLauncher/Views/Styles/Label.axaml" />
+									</Button.Styles>
+								</Button>
+							</Grid>
 						</DataTemplate>
 					</ComboBox.ItemTemplate>
 				</ComboBox>

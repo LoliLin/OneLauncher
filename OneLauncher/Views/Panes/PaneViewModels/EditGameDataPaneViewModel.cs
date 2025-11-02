@@ -29,7 +29,10 @@ internal partial class EditGameDataPaneViewModel : BaseViewModel
     private readonly Action _onCloseCallback;
     [ObservableProperty] private string instanceName;
     [ObservableProperty] private Bitmap currentIcon;
-
+    public string CreationTime => editingGameData.CreationTime.ToString("yyyy年MM月dd日");
+    public string Name => editingGameData.Name;
+    public string Id => editingGameData.InstanceId.ToString();
+    public string VersionId => editingGameData.VersionId;
     public EditGameDataPaneViewModel(
         GameData gameData,
         GameDataManager gameDataManager,
@@ -92,13 +95,13 @@ internal partial class EditGameDataPaneViewModel : BaseViewModel
     private Task ResetLabelOption()
     {
         SelectedTag = null;
-        return _gameDataManager.RemoveTagFromInstanceAsync(editingGameData.InstanceId);
+        return _gameDataManager.RemoveTagFromInstanceAsync(Id);
     }
     partial void OnSelectedTagChanged(GameDataTag? value)
     {
         if (value == null)
             return;
-        _=_gameDataManager.SetTagForInstance(editingGameData.InstanceId, SelectedTag.ID);
+        _=_gameDataManager.SetTagForInstance(Id, SelectedTag.ID);
     }
     #endregion
     #region 高级选项
@@ -203,7 +206,7 @@ internal partial class EditGameDataPaneViewModel : BaseViewModel
     private void DeleteInstance()
     {
         // 未来可以加一个对话框确认
-        _ = _gameDataManager.RemoveGameDataAsync(editingGameData.InstanceId);
+        _ = _gameDataManager.RemoveGameDataAsync(Id);
 
         try
         {

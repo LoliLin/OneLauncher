@@ -80,7 +80,7 @@ public abstract class BasicDataManager<T> where T : class, new()
             await using var fs = new FileStream(_configPath,FileMode.Create,FileAccess.Write,FileShare.Read,0,true);
             await JsonSerializer.SerializeAsync<T>(fs,Data, _serializerOptions);
             OnDataChanged?.Invoke();
-            Debug.WriteLine("触发列表刷新事件");
+            Debug.WriteLine("[OneLauncher.Core.Global.ModelDataMangers.BasicDataManager.Save] 已触发数据更改事件");
         }
         finally
         {

@@ -22,7 +22,7 @@
 		<ScrollViewer>
 			<StackPanel>
 				<StackPanel Margin="12" Orientation="Horizontal" VerticalAlignment="Top" Spacing="8">
-					<TextBox Watermark="搜索模组..." Width="300" 
+					<TextBox Watermark="搜索资源..." Width="300" 
 							 Text="{Binding SearchContent}">
 						<TextBox.KeyBindings>
 							<KeyBinding Gesture="Enter" Command="{Binding ToSearchCommand,Mode=TwoWay}" />

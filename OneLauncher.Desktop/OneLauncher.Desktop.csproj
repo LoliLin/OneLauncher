@@ -11,9 +11,8 @@
         <PublishSingleFile>true</PublishSingleFile>
 		<EnableMicrosoftExtensionsDependencyInjectionSourceGenerator>true</EnableMicrosoftExtensionsDependencyInjectionSourceGenerator>
 	</PropertyGroup>
-	<!--
 	<PropertyGroup>
-		   	    <TrimMode>link</TrimMode>
+		<TrimMode>link</TrimMode>
 		<PublishAot Condition="'$(Configuration)' == 'Release'">true</PublishAot>
 		<PublishAot Condition="'$(Configuration)' == 'Debug'">false</PublishAot>
 	</PropertyGroup>
@@ -25,7 +24,7 @@
 		<NativeLibrary Include="libs\libSkiaSharp.lib" />
 		<DirectPInvoke Include="av_libglesv2" />
 		<NativeLibrary Include="libs\av_libglesv2.lib" />
-	</ItemGroup> -->
+	</ItemGroup>
 	<ItemGroup>
 		<TrimmerRootDescriptor Include="TrimmerRoots.xml" />
 		<TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />

@@ -67,11 +67,46 @@
 				<Button Content="拷贝此游戏数据" Command="{Binding CopyThisInstanceCommand}" />
 			</StackPanel>
 			<Grid ColumnDefinitions="*,*" Margin="0,20,0,0">
-				<Button Command="{Binding DeleteInstanceCommand}">
+				<Button>
 					<StackPanel Orientation="Horizontal">
 						<Image Source="/Assets/icos/del.png" Height="20" Width="20"/>
 						<TextBlock Text="移除此游戏数据"/>
 					</StackPanel>
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel Orientation="Vertical">
+								<StackPanel Orientation="Vertical" >
+									<TextBlock Text="你确定要移除游戏数据吗？" FontSize="18" />
+									<Separator Margin="-5,0,0,0"/>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="最后游戏时间：" />
+										<TextBlock Text="{Binding CreationTime}" />
+									</StackPanel>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="游戏版本：" />
+										<TextBlock Text="{Binding VersionId}" />
+									</StackPanel>	
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="标识符：" />
+										<TextBlock Text="{Binding Id}" />
+									</StackPanel>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="名称：" />
+										<TextBlock Text="{Binding Name}" />
+									</StackPanel>
+								</StackPanel>
+								<Separator Margin="-5,0,0,0"/>
+								<StackPanel Orientation="Horizontal">
+									<Button Command="{Binding DeleteInstanceCommand}" >
+										<StackPanel Orientation="Horizontal">
+											<Image Source="/Assets/icos/del.png" Height="20" Width="20"/>
+											<TextBlock Text="确认移除"/>
+										</StackPanel>
+									</Button>
+								</StackPanel>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>			
 				</Button>
 			</Grid>
 		</StackPanel>

@@ -14,7 +14,7 @@ public class SearchModrinth
     {
         // 搜索仅限支持fabric或支持neoforge的模组
         string SearchUrl = $"https://api.modrinth.com/v2/search?query=\"{Key}\"&facets=[[\"categories:neoforge\",\"categories:fabric\",\"categories:quilt\"],[\"project_type:mod\"]]&index=downloads";
-        Debug.WriteLine(SearchUrl);
+        Debug.WriteLine($"[OneLauncher.Core.Net.ModService.Modrinth.SearchModrinth.ToSearch] 正在请求{SearchUrl}");
 
         HttpResponseMessage response = await httpClient.GetAsync(SearchUrl);
         response.EnsureSuccessStatusCode();

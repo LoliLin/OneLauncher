@@ -19,6 +19,7 @@ using OneLauncher.Core.Launcher;
 using OneLauncher.Core.Minecraft.Server;
 using OneLauncher.Views.Panes;
 using OneLauncher.Views.Panes.PaneViewModels;
+using OneLauncher.Views.Panes.PaneViewModels.Factories;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -61,13 +62,15 @@ internal partial class VersionItem : BaseViewModel
 internal partial class VersionPageViewModel : BaseViewModel
 {
     private readonly DBManager _dBManager;
+    private readonly NewGameDataPaneViewModelFactory _newGameDataPaneViewModelFactory;
     private void RefList()
     {
         VersionList = _dBManager.Data.VersionList.Select(x => new VersionItem(x)).ToList();
     }
-    public VersionPageViewModel(DBManager dBManager)
+    public VersionPageViewModel(DBManager dBManager, NewGameDataPaneViewModelFactory newGameDataPaneViewModelFactory)
     {
         this._dBManager = dBManager;
+        _newGameDataPaneViewModelFactory = newGameDataPaneViewModelFactory;
 #if DEBUG
         // 设计时数据
         if (Design.IsDesignMode)
@@ -163,6 +166,13 @@ internal partial class VersionPageViewModel : BaseViewModel
         {
             await OlanExceptionWorker.ForOlanException(ex);
         }
+    }
+    [RelayCommand]
+    public void CreateGameData(UserVersion versionExp)
+    {
+        IsPaneShow = true;
+        RefDownPane = new NewGameDataPane()
+        { DataContext = _newGameDataPaneViewModelFactory.Create(versionExp, () => IsPaneShow = false) };
     }
 }
 

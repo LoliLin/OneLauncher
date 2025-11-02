@@ -119,7 +119,6 @@ public partial class MainWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
-        Debug.WriteLine("释放残余资源...");
         foreach(var dis in Init.OnApplicationClosingReleaseSourcesList)
             dis.Dispose();
     }

@@ -85,6 +85,22 @@ internal partial class GameDataItem : BaseViewModel
         return new Bitmap(AssetLoader.Open(new Uri(iconUri)));
     }
 }
+internal partial class GameDataTagItem : BaseViewModel
+{
+    private readonly GameDataManager _gameDataManager;
+    public GameDataTag Data { get; set; }
+    public GameDataTagItem(GameDataTag tag,GameDataManager gameDataManager)
+    {
+        Data = tag;
+        _gameDataManager = gameDataManager;
+    }
+    [RelayCommand]
+    private async Task DeleteTag()
+    {
+        await _gameDataManager.RemoveTagAsync(Data.ID);
+        WeakReferenceMessenger.Default.Send(new MainWindowShowFlyoutMessage($"标签 '{Data.Name}' 已删除", NotificationType.Success));
+    }
+}
 internal partial class GameDataPageViewModel : BaseViewModel
 {
     private readonly GameDataManager _gameDataManager;
@@ -97,9 +113,11 @@ internal partial class GameDataPageViewModel : BaseViewModel
     // 刷新列表
     public void RefList()
     {
-        Debug.WriteLine("刷新游戏列表");
-        Dispatcher.UIThread.Post(() =>
-            GameDataList = _gameDataManager.AllGameData.Select(x => new GameDataItem(x, _gameDataManager)).ToList());
+        Dispatcher.UIThread.Post(() => 
+        {
+            GameDataList = _gameDataManager.AllGameData.Select(x => new GameDataItem(x, _gameDataManager)).ToList();
+            AvailableTags = new ObservableCollection<GameDataTagItem>(_gameDataManager.Data.Tags.Values.Select(x => new GameDataTagItem(x, _gameDataManager)).ToList());
+        });
     }
     
     public GameDataPageViewModel(
@@ -111,7 +129,7 @@ internal partial class GameDataPageViewModel : BaseViewModel
         this._newGameDataPaneViewModelFactory = newGameDataPaneViewModelFactory;
         this._editVMFactory = editGameDataPaneViewModelFactory;
         this._gameDataManager = gameDataManager;
-        AvailableTags = new ObservableCollection<GameDataTag>( _gameDataManager.Data.Tags.Values.ToList());
+        AvailableTags = new ObservableCollection<GameDataTagItem>(_gameDataManager.Data.Tags.Values.Select(x => new GameDataTagItem(x,_gameDataManager)).ToList());
 #if DEBUG
         // 造密码的Avalonia设计器天天报错
         // 设计时数据
@@ -133,12 +151,22 @@ internal partial class GameDataPageViewModel : BaseViewModel
                 userModel: designTimeUser
             );
 
+            var gameTag1 = new GameDataTagItem(new GameDataTag
+            {
+                Name = "生存",
+                ID = Guid.NewGuid()
+            }, null);
+
             // 将创建好的 GameData 包装成 GameDataItem 并添加到列表
             GameDataList = new List<GameDataItem>()
-        {
-            new GameDataItem(gameData1,_gameDataManager),
-            new GameDataItem(gameData2,_gameDataManager)
-        };
+            {
+                new GameDataItem(gameData1,_gameDataManager),
+                new GameDataItem(gameData2,_gameDataManager)
+            };
+            AvailableTags = new ObservableCollection<GameDataTagItem>()
+            {
+                gameTag1
+            };
         }
         else
 #endif
@@ -184,7 +212,7 @@ internal partial class GameDataPageViewModel : BaseViewModel
     }
     #region 顶层按钮事件
     [ObservableProperty]
-    private ObservableCollection<GameDataTag> availableTags;
+    private ObservableCollection<GameDataTagItem> availableTags;
     [ObservableProperty]
     private GameDataTag? selectedTag;
     [ObservableProperty]
@@ -200,16 +228,11 @@ internal partial class GameDataPageViewModel : BaseViewModel
             ID = newTagId
         },newTagId);
         NewTagName = string.Empty;
-        AvailableTags = new ObservableCollection<GameDataTag>(_gameDataManager.Data.Tags.Values.ToList());
         WeakReferenceMessenger.Default.Send(new MainWindowShowFlyoutMessage($"标签 '{NewTagName}' 已创建", NotificationType.Success));
     }
     partial void OnSelectedTagChanged(GameDataTag? value)
     {
         if (value == null) return;
-        GameDataList =
-                _gameDataManager.GetInstancesFromTag(value.ID)
-                .Select(x => new GameDataItem(x,_gameDataManager))
-                .ToList();
     }
     [RelayCommand]
     private void ResetFilter()
@@ -228,8 +251,6 @@ internal partial class GameDataPageViewModel : BaseViewModel
             SortingType.AnVersion_NewFront => GameDataList.OrderByDescending(x => new Version(x.data.VersionId)).ToList(),
             _ => GameDataList // 默认不排序
         };
-
-        GameDataList = orderedList;
         _gameDataManager.Data.Instances = GameDataList.ToDictionary(x => x.data.InstanceId,x => x.data);
         _=_gameDataManager.Save();
     }

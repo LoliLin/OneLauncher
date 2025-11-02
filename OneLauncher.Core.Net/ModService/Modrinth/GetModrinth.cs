@@ -24,13 +24,13 @@ public class GetModrinth
     {
         var client = Global.Init.Download.unityClient; 
         var Url = $"https://api.modrinth.com/v2/project/{ModID}/version?game_versions=[\"{version}\"]&loaders=[\"{modType.ToString()}\"]";
-        Debug.WriteLine(Url); 
+        Debug.WriteLine($"[OneLauncher.Core.Net.ModService.Modrinth.GetModrinth.Init] 正在请求{Url}");
         HttpResponseMessage response = await client.GetAsync(Url);
         response.EnsureSuccessStatusCode();
 
         try
         {
-            using (JsonDocument document = JsonDocument.Parse(await response.Content.ReadAsStringAsync()))
+            using (JsonDocument document = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync()))
             {
                 JsonElement firstElement = document.RootElement[0];
                 info = JsonSerializer.Deserialize<ModrinthProjects>(firstElement.GetRawText(),ModrinthGetJsonContext.Default.ModrinthProjects);
@@ -50,7 +50,7 @@ public class GetModrinth
         foreach (var item in info.Dependencies)
         {
             var DUrl = $"https://api.modrinth.com/v2/project/{item.ProjectId}/version?game_versions=[\"{version}\"]&loaders=[\"{modType.ToString()}\"]";
-            Debug.WriteLine(DUrl);
+            Debug.WriteLine($"[OneLauncher.Core.Net.ModService.Modrinth.GetModrinth.Init] 项目{item.ProjectId} 正在请求{DUrl}");
             HttpResponseMessage Dresponse = await client.GetAsync(DUrl);
             Dresponse.EnsureSuccessStatusCode();
 

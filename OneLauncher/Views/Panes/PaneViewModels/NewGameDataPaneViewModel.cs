@@ -31,8 +31,15 @@ internal partial class NewGameDataPaneViewModel : BaseViewModel
     [ObservableProperty] private List<UserModel> availableUsers;
     [ObservableProperty] private UserModel selectedUser;
 
-    public NewGameDataPaneViewModel(DBManager configManager,AccountManager accountManager,GameDataManager gameDataManager,Action onCloseCallback)
+    public NewGameDataPaneViewModel(
+        DBManager configManager,
+        AccountManager accountManager,
+        GameDataManager gameDataManager,
+        Action onCloseCallback,
+        UserVersion? defaultBasicVerions = null)
     {
+        if(defaultBasicVerions != null)
+            selectedBaseVersion = defaultBasicVerions;
         this._configManager = configManager;
         this._gameDataManager = gameDataManager;
         this._accountManager = accountManager;

@@ -1,4 +1,5 @@
 ﻿using OneLauncher.Core.Global.ModelDataMangers;
+using OneLauncher.Core.Helper.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,9 @@ internal class NewGameDataPaneViewModelFactory
     public NewGameDataPaneViewModel Create(Action onCloseCallback)
     {
         return new NewGameDataPaneViewModel(_dBManager, _accountManager,_gameDataManager,onCloseCallback);
+    }
+    public NewGameDataPaneViewModel Create(UserVersion defaultBasicVerions, Action onCloseCallback)
+    {
+        return new NewGameDataPaneViewModel(_dBManager, _accountManager, _gameDataManager, onCloseCallback, defaultBasicVerions);
     }
 }

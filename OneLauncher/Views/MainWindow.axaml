@@ -74,7 +74,7 @@
 								<StackPanel Orientation="Horizontal" Spacing="8">
 									<Image Source="/Assets/icos/browser.png" Width="32" Height="32"/>
 									<TextBlock x:Name="ModsBrowserText"
-                                               Text="模组浏览"
+                                               Text="资源检索"
                                                VerticalAlignment="Center"
                                                FontSize="16"
                                                IsVisible="{Binding IsPaneOpen, ElementName=SidebarSplitView}"/>
