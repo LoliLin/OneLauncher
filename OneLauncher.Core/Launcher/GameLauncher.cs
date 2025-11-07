@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,12 +15,12 @@ namespace OneLauncher.Core.Launcher;
 public class GameLauncher : IGameLauncher
 {
     public event Action? GameStartedEvent;
-    public event Action? GameClosedEvent;
+    public event Action<int>? GameClosedEvent;
     public event Action<string>? GameOutputEvent;
     public CancellationToken CancellationToken = CancellationToken.None; // 外部可以设置
 
     private Process? _gameProcess;
-    private string? _launchArgumentsPath = null;
+    private readonly TaskCompletionSource<Task> tcs = new();
 
     private readonly string gameRootPath = Init.GameRootPath;
     private readonly AccountManager accountManager = Init.AccountManager;
@@ -94,7 +95,8 @@ public class GameLauncher : IGameLauncher
             _gameProcess.BeginOutputReadLine();
             _gameProcess.BeginErrorReadLine();
 
-            return _gameProcess.WaitForExitAsync(CancellationToken); 
+            tcs.SetResult(_gameProcess.WaitForExitAsync(CancellationToken)); 
+            return tcs.Task;
         }
         catch(Win32Exception)
         {
@@ -113,20 +115,18 @@ public class GameLauncher : IGameLauncher
         return BasicLaunch(gameData);
     }
     public async Task Play(GameData gameData, ServerInfo? serverInfo = null)
-    {
-        await await BasicLaunch(gameData, serverInfo);
-    }
+        => await await BasicLaunch(gameData, serverInfo);
+    
     public async Task Play(UserVersion userVersion, ServerInfo? serverInfo = null, bool useRootMode = false)
     {
         GameData finded = await Init.GameDataManager.GetOrCreateInstanceAsync(userVersion);
-        await await BasicLaunch(finded, serverInfo, useRootMode);
+        await await BasicLaunch(finded, serverInfo, useRootMode); 
     }
     public Task Stop()
     {
         if (_gameProcess != null && !_gameProcess.HasExited)
         {
             _gameProcess.Kill(true); // 强制结束进程树
-            File.Delete(_launchArgumentsPath!); // 删除临时文件
             return _gameProcess.WaitForExitAsync(CancellationToken); // 调用方可以选择等待游戏进程结束
         }
         else return Task.CompletedTask;
@@ -141,7 +141,6 @@ public class GameLauncher : IGameLauncher
         // 咱就是，其实没有什么真正好的判断游戏已经启动的方法
         if (e.Data.Contains("Backend library: LWJGL version"))
             GameStartedEvent?.Invoke();
-        
     }
     private void OnErrorDataReceived(object sender, DataReceivedEventArgs e)
     {
@@ -149,15 +148,14 @@ public class GameLauncher : IGameLauncher
         Debug.WriteLine(e.Data);
         GameOutputEvent?.Invoke($"[ERROR] {e.Data}{Environment.NewLine}");
 
-        if(e.Data.Contains("java.lang.ClassNotFoundException"))
-            throw new OlanException("启动失败", "JVM无法找到主类，请确保你的游戏资源完整性", OlanExceptionAction.Error);
-        
+        //if(e.Data.Contains("java.lang.ClassNotFoundException"))
+        //    tcs.SetException(new OlanException("启动失败", "JVM无法找到主类，请确保你的游戏资源完整性", OlanExceptionAction.Error));
     }
     private void OnGameProcessExited(object? sender, EventArgs e)
     {
-        GameClosedEvent?.Invoke();
-        if(_gameProcess.ExitCode != 0)
-            throw new OlanException("游戏异常退出", $"检测到游戏异常退出，代码：{_gameProcess.ExitCode}{Environment.NewLine}建议尝试以调式模式启动以寻找异常原因", OlanExceptionAction.Warning);
+        GameClosedEvent?.Invoke(_gameProcess.ExitCode);
+        //if(_gameProcess?.ExitCode != 0)
+        //    tcs.SetException(new OlanException("游戏异常退出", $"检测到游戏异常退出，代码：{_gameProcess.ExitCode}{Environment.NewLine}建议尝试以调式模式启动以寻找异常原因", OlanExceptionAction.Warning));
     }
     #endregion
 }

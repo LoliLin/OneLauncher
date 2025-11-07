@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 namespace OneLauncher.Codes;
 internal class Game
 {
-    public static Task EasyGameLauncher(GameData gameData,ServerInfo? serverInfo,bool useDebugMode)
+    public static async Task EasyGameLauncher(GameData gameData,ServerInfo? serverInfo,bool useDebugMode)
     {
         try
         {
@@ -28,8 +28,18 @@ internal class Game
             IGameLauncher gameLauncher = new GameLauncher();
             gameLauncher.GameStartedEvent += () =>
                 WeakReferenceMessenger.Default.Send(new MainWindowShowFlyoutMessage("游戏已启动！"));
-            gameLauncher.GameClosedEvent += () =>
+            gameLauncher.GameClosedEvent += (code) =>
+            {
                 WeakReferenceMessenger.Default.Send(new MainWindowShowFlyoutMessage("游戏已关闭！"));
+                if(code != 0)
+                    _=OlanExceptionWorker.ForOlanException(
+                        new OlanException(
+                            "游戏异常退出",
+                            $"检测到游戏异常退出，代码：{code}{Environment.NewLine}建议尝试以调式模式启动以寻找异常原因", 
+                            OlanExceptionAction.Warning),
+                        () => _=EasyGameLauncher(gameData,serverInfo,true));
+            };
+            
             if (useDebugMode)
             {
                 // 如果是调试模式，使用调试窗口
@@ -37,32 +47,31 @@ internal class Game
                 gameLauncher.GameOutputEvent += (m)
                     => WeakReferenceMessenger.Default.Send(new GameMessage(m));
             }
-            _ = gameLauncher.Play(gameData, serverInfo);
-            return Task.CompletedTask;
+            await gameLauncher.Play(gameData, serverInfo);
         }
         #region 错误处理
         catch (OlanException ex)
         {
-            return OlanExceptionWorker.ForOlanException(ex);
+            await OlanExceptionWorker.ForOlanException(ex);
         }
         catch (UnauthorizedAccessException uex)
         {
-            return OlanExceptionWorker.ForOlanException(
+            await OlanExceptionWorker.ForOlanException(
                         new OlanException("启动失败", $"没有权限访问游戏文件夹{Environment.NewLine}{uex}", OlanExceptionAction.Error, uex));
         }
         catch (FileNotFoundException fex)
         {
-            return OlanExceptionWorker.ForOlanException(
+            await OlanExceptionWorker.ForOlanException(
                         new OlanException("启动失败", $"无法找到启动所需的文件{Environment.NewLine}{fex}", OlanExceptionAction.Error, fex));
         }
         catch (DirectoryNotFoundException fex)
         {
-            return OlanExceptionWorker.ForOlanException(
+            await OlanExceptionWorker.ForOlanException(
                         new OlanException("启动失败", $"无法找到启动所需的文件夹{Environment.NewLine}{fex}", OlanExceptionAction.Error, fex));
         }
         catch (Exception ex)
         {
-            return OlanExceptionWorker.ForOlanException(
+            await OlanExceptionWorker.ForOlanException(
                         new OlanException("启动失败", $"系统未安装Java或系统错误{Environment.NewLine}{ex}", OlanExceptionAction.Error, ex));
         }
         #endregion

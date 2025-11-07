@@ -79,10 +79,10 @@
 						  </Button.Styles>
 					  </Button>
 				  </StackPanel>
-				  <StackPanel Orientation="Horizontal">
-					  <TextBlock Text="版本号："/>
-					  <TextBlock Text="{Binding Version}" />
-				  </StackPanel>
+				  <TextBlock Tapped="TextBlock_Tapped">
+					  <Run Text="版本号："/>
+					  <Run Text="{Binding Version}"/>
+				  </TextBlock>
 			  </StackPanel>
 		  </StackPanel>
 	  </StackPanel>

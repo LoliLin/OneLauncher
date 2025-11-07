@@ -47,7 +47,7 @@ public partial class MainWindow : Window
     public account accountPage;
     public ModsBrowser modsBrowserPage;
     public gamedata gamedataPage;
-    public static MainWindow mainwindow;
+    public static MainWindow mainwindow { get; set; }
     bool IsError;
     IServiceCollection servises;
     public readonly IServiceProvider provider;

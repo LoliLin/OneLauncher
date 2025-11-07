@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <linker>
-	<assembly fullname="OneLauncher">
-		
-	</assembly>
-	<assembly fullname="OneLauncher.Core">
-		
+	<assembly fullname="Avalonia.Controls">
+		<type fullname="Avalonia.Controls.TextBox">
+			<method name="Copy" />
+			<method name="Cut" />
+			<method name="Paste" />
+			<method name="SelectAll" />
+		</type>
 	</assembly>
 </linker>

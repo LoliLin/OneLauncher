@@ -10,7 +10,7 @@ namespace OneLauncher.Core.Launcher;
 public interface IGameLauncher
 {
     event Action? GameStartedEvent;
-    event Action? GameClosedEvent;
+    event Action<int>? GameClosedEvent;
     event Action<string>? GameOutputEvent;
     // 最简单，通过实例ID启动游戏
     Task Play(string InstanceID);

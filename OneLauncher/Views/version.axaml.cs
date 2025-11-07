@@ -30,7 +30,7 @@ public partial class version : UserControl
     /// 真·一键启动游戏函数
     /// </summary>
     /// <returns>异步任务Task</returns>
-    public static async Task<Task> EasyGameLauncher(
+    public static async void EasyGameLauncher(
         GameData gameData,
         bool UseGameTasker = false,
         ServerInfo? serverInfo = null

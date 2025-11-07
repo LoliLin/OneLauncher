@@ -99,7 +99,7 @@ public partial class PowerPlayPaneViewModel : BaseViewModel
             HostRoomCode = finalRoomCode;
             IsConnected = true;
             connectService.StartAsHost(p2pNodeName, null);
-            _ = version.EasyGameLauncher(SelectedHostGameData); // 直接帮他把游戏启动了
+            version.EasyGameLauncher(SelectedHostGameData); // 直接帮他把游戏启动了
         }
         catch (OlanException olanEx)
         {
@@ -187,7 +187,7 @@ public partial class PowerPlayPaneViewModel : BaseViewModel
                 // 启动P2P
                 mainPower.ConnectionEstablished += () =>
                 {
-                    _ = version.EasyGameLauncher(instanceToLaunch, serverInfo: new ServerInfo
+                    version.EasyGameLauncher(instanceToLaunch, serverInfo: new ServerInfo
                     {
                         Ip = "127.0.0.1",
                         Port = localPort.ToString()

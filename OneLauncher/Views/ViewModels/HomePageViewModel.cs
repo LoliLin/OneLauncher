@@ -86,7 +86,7 @@ internal partial class HomePageViewModel : BaseViewModel
         }
         _configManager.Data.OlanSettings.DefaultInstanceID = SelectedGameData.InstanceId;
         _ = _configManager.Save();
-        _ = version.EasyGameLauncher(SelectedGameData);
+        version.EasyGameLauncher(SelectedGameData);
     }
     #region 其他Item
     [RelayCommand]
