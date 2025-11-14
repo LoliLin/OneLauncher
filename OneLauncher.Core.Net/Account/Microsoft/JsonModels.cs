@@ -141,7 +141,7 @@ public class XSTSAuthResponse
 public class XSTSErrorResponse
 {
     [JsonPropertyName("XErr")]
-    public string? XErr { get; set; }
+    public int? XErr { get; set; }
 
     [JsonPropertyName("Message")]
     public string? Message { get; set; }
