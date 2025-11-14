@@ -11,6 +11,7 @@
         <PublishSingleFile>true</PublishSingleFile>
 		<EnableMicrosoftExtensionsDependencyInjectionSourceGenerator>true</EnableMicrosoftExtensionsDependencyInjectionSourceGenerator>
 	</PropertyGroup>
+	<!--
 	<PropertyGroup>
 		<TrimMode>link</TrimMode>
 		<PublishAot Condition="'$(Configuration)' == 'Release'">true</PublishAot>
@@ -25,14 +26,15 @@
 		<DirectPInvoke Include="av_libglesv2" />
 		<NativeLibrary Include="libs\av_libglesv2.lib" />
 	</ItemGroup>
+	-->
 	<ItemGroup>
 		<TrimmerRootDescriptor Include="TrimmerRoots.xml" />
 		<TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
 		<TrimmerRootAssembly Include="Avalonia.Controls" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\OneLauncher.Console\OneLauncher.Console.csproj" />

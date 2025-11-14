@@ -42,6 +42,9 @@
 
 	<Application.Styles>
 		<FluentTheme />
+		<Style Selector="TextBlock">
+			
+		</Style>
 		<Style Selector="TextBox">
 			<Setter Property="ContextMenu">
 				<ContextMenu DataContext="{Binding $parent[TextBox]}">
