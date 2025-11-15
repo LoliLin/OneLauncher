@@ -5,7 +5,7 @@
 快速安装（Windosw PowerShell）：
 
 ```powershell
-Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/abbcccbba/OneLauncher/master/OneLauncher.Desktop/install.ps1'))
+Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/zhweaa/OneLauncher/master/OneLauncher.Desktop/install.ps1'))
 ```
 
 ## 系统要求
