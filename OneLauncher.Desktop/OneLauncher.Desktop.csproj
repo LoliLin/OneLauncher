@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net9.0</TargetFramework>
@@ -8,7 +8,7 @@
 		<Platforms>x64</Platforms>
 		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 
-        <PublishSingleFile>true</PublishSingleFile>
+		<PublishSingleFile>true</PublishSingleFile>
 		<EnableMicrosoftExtensionsDependencyInjectionSourceGenerator>true</EnableMicrosoftExtensionsDependencyInjectionSourceGenerator>
 	</PropertyGroup>
 	<!--

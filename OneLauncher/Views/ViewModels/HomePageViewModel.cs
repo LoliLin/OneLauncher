@@ -2,6 +2,7 @@
 using Avalonia.Controls.Notifications;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -53,6 +54,13 @@ internal partial class HomePageViewModel : BaseViewModel
         this._gameDataManager = gameDataManager;
         this._mctVMFactory = powerPlayPaneViewModelFactory;
         LaunchItems = _gameDataManager.AllGameData;
+        _gameDataManager.OnDataChanged += () =>
+        {
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                LaunchItems = _gameDataManager.AllGameData;
+            });
+        };
         if (_configManager.Data.OlanSettings.DefaultInstanceID != null)
             SelectedGameData = _gameDataManager.GetInstanceFromId(_configManager.Data.OlanSettings.DefaultInstanceID);
 #if DEBUG
