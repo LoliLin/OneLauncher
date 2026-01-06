@@ -23,7 +23,6 @@ public class AppSettings
     public bool IsSha1Enabled { get; set; } = true;
     public DownloadSourceStrategy DownloadMinecraftSourceStrategy { get; set; } = DownloadSourceStrategy.OfficialOnly;
     public string? InstallPath { get; set; }
-    //public bool UseTempFileArguments { get; set; } = true;
     public string DefaultInstanceID { get; set; }
     // 每天一更新
     public DateTimeOffset LastVersionManifestRefreshTime { get; set; } = DateTimeOffset.UtcNow;
@@ -32,6 +31,7 @@ public class AppConfig
 {
     // 除了系统自带的Java以外启动器安装的所有Java版本列表
     public Dictionary<int,string?> AvailableJavas { get; set; } = new();
+    public Dictionary<string, ServerConfig> FavoriteServers { get; set; } = new();
     // 当前启动器已安装的所有版本列表，默认初始化为空列表
     public List<UserVersion> VersionList { get; set; } = new ();
     public AppSettings OlanSettings { get; set; } = new AppSettings();

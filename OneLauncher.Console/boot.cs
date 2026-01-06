@@ -1,5 +1,6 @@
 ﻿using OneLauncher.Core.Global;
 using OneLauncher.Core.Helper;
+using OneLauncher.Core.Helper.Models;
 using OneLauncher.Core.Launcher;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,17 @@ public class Boot
             {
                 case "--quicklyPlay":
                     await new GameLauncher().Play(args[1]);
+                    break;
+                case "--joinServer":
+                    var server = Init.ConfigManger.Data.FavoriteServers.GetValueOrDefault(args[1]);
+                    if (server == null) break;
+                    var game = Init.GameDataManger.Data.Instances.GetValueOrDefault(server.DefaultInstanceId);
+                    if (game == null) break;
+                    await new GameLauncher().Play(game, serverInfo: new ServerInfo()
+                    {
+                        Ip = server.ServerIP,
+                        Port = server.ServerPort
+                    });
                     break;
                 case "--releaseMemory":
                     await ReleaseMemory.OptimizeAsync();

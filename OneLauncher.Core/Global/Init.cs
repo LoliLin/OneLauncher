@@ -30,6 +30,7 @@ public static class Init
     public static List<IDisposable> OnApplicationClosingReleaseSourcesList = new();
     // 必要的时候还是得耦合一下的，啥都得传递那他妈的写起来太难受了
     public static DBManager ConfigManger => ConfigManager;
+    public static GameDataManager GameDataManger => GameDataManager;
     internal static DBManager ConfigManager { get; private set; }
     internal static AccountManager AccountManager { get; private set; }
     internal static GameDataManager GameDataManager { get; private set; }
@@ -81,6 +82,11 @@ public static class Init
             var javaManager = new JavaManager();
             services.AddSingleton<JavaManager>(javaManager);
             JavaManager = javaManager;
+
+            /*
+             调试代码
+             */
+            //ConfigManager.Data.FavoriteServers.Add("zw",new ServerConfig("mc.zhweaa.dpdns.org","25568", "084c3333"));
 
             return services; 
         }

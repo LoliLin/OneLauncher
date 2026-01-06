@@ -49,7 +49,7 @@ internal partial class GameDataItem : BaseViewModel
                 Ip = QuicklyServerInfoIP,
                 Port = QuicklyServerInfoPort ?? "25565"
             };
-        Game.EasyGameLauncher(
+        _=Game.EasyGameLauncher(
             gameData,
             useDebugMode: IsUseDebugModLaunch,
             serverInfo: quicklyPlayServerInfo
