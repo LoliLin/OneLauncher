@@ -24,6 +24,29 @@ Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw
 - **特定平台功能限制**
   - **联机** 仅限Windows
   - **Web Accoount Manger登入方式** 仅限Windows
+    
+## 支持的额外功能列表
+- 命令行模式
+- 多下载源下载游戏
+- 导入PCL2版本
+- 自定义/优化启动参数
+- 查看新闻
+- 服务器书签
+- 内存优化
+- 模组加载器
+  - Fabric
+  - Neoforge
+  - Quilt
+  - Forge（有限支持）
+- 一键开服
+- 管理本地模组
+- 导入Modpack包
+- 微软登入验证
+- 外置登入验证
+- 离线登入验证
+- 联机
+- 下载模组
+  - Modrinth
 
 ## 跨平台安装与构建指南
 
