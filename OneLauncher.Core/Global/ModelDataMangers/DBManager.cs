@@ -23,7 +23,8 @@ public class AppSettings
     public bool IsSha1Enabled { get; set; } = true;
     public DownloadSourceStrategy DownloadMinecraftSourceStrategy { get; set; } = DownloadSourceStrategy.OfficialOnly;
     public string? InstallPath { get; set; }
-    public string DefaultInstanceID { get; set; }
+    public string? ApiKey { get; set; } = null;
+    public string? DefaultInstanceID { get; set; }
     // 每天一更新
     public DateTimeOffset LastVersionManifestRefreshTime { get; set; } = DateTimeOffset.UtcNow;
 }

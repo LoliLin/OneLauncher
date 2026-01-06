@@ -20,6 +20,38 @@ using System.Threading.Tasks;
 namespace OneLauncher.Codes;
 internal class Game
 {
+    class LaunchException : Exception
+    {
+        public string InstanceName;
+        public string InstanceId;
+        public string MinecraftVersion;
+        public string[] ModList;
+        public ModEnum ModType;
+        public string SystemEnvironmentInformations;
+        public string ProcessOutputs;
+        public LaunchException(GameData data) 
+        { 
+            InstanceName = data.Name;
+            InstanceId = data.InstanceId;
+            MinecraftVersion = data.VersionId;
+            ModType = data.ModLoader;
+            SystemEnvironmentInformations = 
+                $"OSVersion:{Environment.OSVersion} UserName:{Environment.UserName} CPU:{Environment.CpuUsage.TotalTime}";
+            ProcessOutputs = File.ReadAllText(Path.Combine(Init.GameRootPath,"logs","latest.log"));
+            var path = Path.Combine(data.InstancePath, "mods");
+            if (Directory.Exists(path))
+            {
+                var files = Directory.GetFiles(path);
+                if (files.Length > 0)
+                {
+                    ModList = files;
+                }
+            }
+            else
+                ModList = Array.Empty<string>();
+            
+        }
+    }
     public static async Task EasyGameLauncher(GameData gameData,ServerInfo? serverInfo,bool useDebugMode)
     {
         try
@@ -31,13 +63,22 @@ internal class Game
             gameLauncher.GameClosedEvent += (code) =>
             {
                 WeakReferenceMessenger.Default.Send(new MainWindowShowFlyoutMessage("游戏已关闭！"));
-                if(code != 0)
-                    _=OlanExceptionWorker.ForOlanException(
-                        new OlanException(
-                            "游戏异常退出",
-                            $"检测到游戏异常退出，代码：{code}{Environment.NewLine}建议尝试以调式模式启动以寻找异常原因", 
-                            OlanExceptionAction.Warning),
-                        () => _=EasyGameLauncher(gameData,serverInfo,true));
+                try
+                {
+                    if (code != 0)
+                        //_=OlanExceptionWorker.ForOlanException(
+                        throw new OlanException(
+                             "游戏异常退出",
+                             $"检测到游戏异常退出，代码：{code}{Environment.NewLine}建议尝试以调式模式启动或询问Gemini以寻找异常原因",
+                             OlanExceptionAction.Warning,
+                             new LaunchException(gameData),
+                             () => _ = EasyGameLauncher(gameData, serverInfo, true));
+                }
+                catch(OlanException ex)
+                {
+
+                    _ = OlanExceptionWorker.ForOlanException(ex);
+                }
             };
             
             if (useDebugMode)
@@ -51,7 +92,7 @@ internal class Game
         }
         #region 错误处理
         catch (OlanException ex)
-        {
+        {   
             await OlanExceptionWorker.ForOlanException(ex);
         }
         catch (UnauthorizedAccessException uex)
